@@ -17,17 +17,17 @@
 }
 
 :root{
-  --paper:      #F4EFE3;
+  --paper:      #CEC8B8;
   --paper-alt:  #EAE1CC;
   --paper-deep: #E1D6B8;
-  --ink:        #221D17;
-  --ink-soft:   #5B5348;
+  --ink:        #403D34;
+  --ink-soft:   #868374;
   --ink-faint:  #8A8071;
   --rule:       #C9BEA0;
   --rule-strong:#A99B78;
-  --crimson:    #8F2C2C;
+  --crimson:    #526B90;
   --crimson-deep:#6F2020;
-  --gold:       #AD7F2A;
+  --gold:       #403D34;
 
 --font-display: 'Parichehr', serif;
 --font-body: 'Lion', sans-serif;
