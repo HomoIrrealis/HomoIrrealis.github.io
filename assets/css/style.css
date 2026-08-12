@@ -2,7 +2,19 @@
    دفتر روایت — قالب وبلاگ راست‌چین با روح روزنامه‌ی قدیمی
    =========================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Arabic:wght@500;700;900&family=Vazirmatn:wght@300;400;500;700&display=swap');
+@font-face {
+    font-family: 'Parichehr';
+    src: url('../fonts/Parichehr.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lion';
+    src: url('../fonts/Lion Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
 
 :root{
   --paper:      #F4EFE3;
