@@ -16,18 +16,22 @@
     font-style: normal;
 }
 
-:root{
-  --paper:      #CEC8B8;
-  --paper-alt:  #CEC8B8;
-  --paper-deep: #E1D6B8;
-  --ink:        #403D34;
-  --ink-soft:   #868374;
-  --ink-faint:  #8A8071;
-  --rule:       #C9BEA0;
-  --rule-strong:#A99B78;
-  --crimson:    #526B90;
-  --crimson-deep:#6F2020;
-  --gold:       #403D34;
+:root {
+  --paper:        #335C67;
+  --paper-alt:    #3D6872;
+  --paper-deep:   #294D57;
+
+  --ink:          #F5F0DC;
+  --ink-soft:     #99A88C;
+  --ink-faint:    #99A88C;
+
+  --rule:         #99A88C;
+  --rule-strong:  #E09F3E;
+
+  --crimson:      #9E2A2B;
+  --crimson-deep: #540B0E;
+
+  --gold:         #E09F3E;
 
 --font-display: 'Parichehr', serif;
 --font-body: 'Lion', sans-serif;
