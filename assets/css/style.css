@@ -4,14 +4,14 @@
 
 @font-face {
     font-family: 'Parichehr';
-    src: url('../fonts/Parichehr.ttf') format('truetype');
+    src: url('../fonts/Parichehr') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Lion';
-    src: url('../fonts/Lion Medium.ttf') format('truetype');
+    src: url('../fonts/Lion') format('truetype');
     font-weight: 500;
     font-style: normal;
 }
