@@ -1,4 +1,5 @@
 const KEY="homoIrrealisAdminData";
+const API="https://homoirrealis.netlify.app/.netlify/functions/github";
 const defaults={categories:["Ù¾Ø±ÙˆÚ˜Ù‡â€ŒÙ‡Ø§","Ù…Ø·Ø§Ù„Ø¹Ø§Øª","ÛŒØ§Ø¯Ø¯Ø§Ø´Øª"],posts:[
 {id:1,title:"Ù†Ù…ÙˆÙ†Ù‡ Ù†ÙˆØ´ØªÙ‡",category:"ÛŒØ§Ø¯Ø¯Ø§Ø´Øª",tags:["ÛŒØ§Ø¯Ø¯Ø§Ø´Øª","Ø§ÛŒÙ…Ø§Ú˜"],image:"",content:"<p>Ø§ÛŒÙ† ÛŒÚ© Ù†ÙˆØ´ØªÙ‡â€ŒÛŒ Ù†Ù…ÙˆÙ†Ù‡ Ø§Ø³Øª.</p>",date:"Û±Ûµ Ù…Ø±Ø¯Ø§Ø¯ Û±Û´Û°Ûµ",time:"22:00",status:"published"},
 {id:2,title:"Ù†Ù…ÙˆÙ†Ù‡ Ø§Ø«Ø±",category:"Ù¾Ø±ÙˆÚ˜Ù‡â€ŒÙ‡Ø§",tags:["Ù¾Ø±ÙˆÚ˜Ù‡"],image:"",content:"<p>Ø§ÛŒÙ† ÛŒÚ© Ø§Ø«Ø± Ù†Ù…ÙˆÙ†Ù‡ Ø§Ø³Øª.</p>",date:"Û±Û´ Ù…Ø±Ø¯Ø§Ø¯ Û±Û´Û°Ûµ",time:"18:30",status:"published"}
@@ -10,8 +11,36 @@ const API = "https://homoirrealis.netlify.app/.netlify/functions/github";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
 async 
   async function save(){
-  localStorage.setItem(KEY, JSON.stringify(data));
+  localStorage.setItem(KEY,JSON.stringify(data));
   renderAll();
+
+  try {
+    const response=await fetch(API+"?file=admin/data.json",{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        content:JSON.stringify(data,null,2),
+        message:"Update blog data"
+      })
+    });
+
+    const result=await response.json();
+
+    console.log("GitHub response:",result);
+
+    if(!response.ok || !result.success){
+      alert("خطا در ذخیره GitHub: "+(result.error||"Unknown error"));
+      return;
+    }
+
+    alert("در GitHub ذخیره شد.");
+  }catch(error){
+    console.error(error);
+    alert("اتصال به GitHub انجام نشد: "+error.message);
+  }
+  }
 
   try {
     const response = await fetch(
