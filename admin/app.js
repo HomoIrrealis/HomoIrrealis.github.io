@@ -5,8 +5,28 @@ const defaults={categories:["Ù¾Ø±ÙˆÚ˜Ù‡â€ŒÙ‡Ø§","Ù…Ø·Ø
 ],links:[{title:"Pinterest",url:"https://www.pinterest.com/itsnyctophilia/21-%CA%BCtill-i-die/"}],page:{title:"Ù…ÙŽÙ†",content:""},theme:{bg:"#335C67",fg:"#FEF4AF",title:"Homo Irrealis",desc:"Ø§ÛŒÙ…Ø§Ú˜ØŒ Ø¢Ø«Ø§Ø± Ùˆ ÛŒØ§Ø¯Ø¯Ø§Ø´Øªâ€ŒÙ‡Ø§",about:true,links:true,tags:true,archive:true,categories:true,css:""},settings:{admin:"DIAN",panel:"Homo Irrealis"}};
 let data=load();
 
+const API = "/.netlify/functions/github";
+
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
-function save(){localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
+async function save(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+  renderAll();
+
+  try {
+    await fetch(API, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: JSON.stringify(data, null, 2),
+        message: "Update blog data"
+      })
+    });
+  } catch(error) {
+    console.error("GitHub save failed:", error);
+  }
+}
 function $(id){return document.getElementById(id)}
 function esc(s=""){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
