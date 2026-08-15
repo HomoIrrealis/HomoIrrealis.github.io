@@ -17,38 +17,9 @@ const defaults = {
     "یادداشت"
   ],
 
-  posts: [
-    {
-      id: 1,
-      title: "نمونه نوشته",
-      category: "یادداشت",
-      tags: ["یادداشت", "ایماژ"],
-      image: "",
-      content: "<p>این یک نوشته‌ی نمونه است.</p>",
-      date: "۱۵ مرداد ۱۴۰۵",
-      time: "22:00",
-      status: "published"
-    },
+  posts: [],
 
-    {
-      id: 2,
-      title: "نمونه اثر",
-      category: "پروژه‌ها",
-      tags: ["پروژه"],
-      image: "",
-      content: "<p>این یک اثر نمونه است.</p>",
-      date: "۱۴ مرداد ۱۴۰۵",
-      time: "18:30",
-      status: "published"
-    }
-  ],
-
-  links: [
-    {
-      title: "Pinterest",
-      url: "https://www.pinterest.com/itsnyctophilia/21-%CA%BCtill-i-die/"
-    }
-  ],
+  links: [],
 
   page: {
     title: "مَن",
@@ -81,237 +52,6 @@ const defaults = {
 
 let data = loadLocal();
 
-let githubReady = false;
-
-
-/* =========================
-   LOCAL STORAGE
-========================= */
-
-function loadLocal() {
-  try {
-    const saved = localStorage.getItem(KEY);
-
-    if (saved) {
-      return JSON.parse(saved);
-    }
-
-    return structuredClone(defaults);
-
-  } catch (error) {
-    console.error("Local data error:", error);
-    return structuredClone(defaults);
-  }
-}
-
-
-/* =========================
-   SAVE LOCAL + GITHUB
-========================= */
-
-async function save() {
-
-  // همیشه یک نسخه‌ی محلی نگه می‌داریم
-  try {
-    localStorage.setItem(
-      KEY,
-      JSON.stringify(data)
-    );
-  } catch (error) {
-    console.error("Local save error:", error);
-  }
-
-  renderAll();
-
-  try {
-
-    const response = await fetch(
-      `${API}?file=${encodeURIComponent(DATA_FILE)}`,
-      {
-        method: "PUT",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-          content: JSON.stringify(data, null, 2),
-          message: "Update blog data"
-        })
-      }
-    );
-
-
-    const result = await response.json();
-
-
-    if (!response.ok || !result.success) {
-
-      throw new Error(
-        result.error ||
-        result.message ||
-        "GitHub save failed"
-      );
-    }
-
-
-    githubReady = true;
-
-    console.log(
-      "Homo Irrealis: saved to GitHub"
-    );
-
-
-    return true;
-
-
-  } catch (error) {
-
-    githubReady = false;
-
-    console.error(
-      "GitHub save error:",
-      error
-    );
-
-    alert(
-      "تغییرات روی GitHub ذخیره نشد.\n\n" +
-      error.message
-    );
-
-    return false;
-  }
-}
-
-
-/* =========================
-   LOAD FROM GITHUB
-========================= */
-
-async function loadFromGitHub() {
-
-  try {
-
-    const response = await fetch(
-      `${API}?file=${encodeURIComponent(DATA_FILE)}`,
-      {
-        method: "GET",
-        cache: "no-store"
-      }
-    );
-
-
-    const result = await response.json();
-
-
-    if (
-      !response.ok ||
-      !result.success
-    ) {
-      throw new Error(
-        result.error ||
-        "GitHub data could not be loaded."
-      );
-    }
-
-
-    if (
-      !result.content ||
-      result.content.trim() === ""
-    ) {
-      return;
-    }
-
-
-    const remoteData =
-      JSON.parse(result.content);
-
-
-    data = normalizeData(remoteData);
-
-
-    // ذخیره‌ی نسخه‌ی دریافت‌شده در مرورگر
-    localStorage.setItem(
-      KEY,
-      JSON.stringify(data)
-    );
-
-
-    githubReady = true;
-
-    renderAll();
-
-
-    console.log(
-      "Homo Irrealis: data loaded from GitHub"
-    );
-
-
-  } catch (error) {
-
-    githubReady = false;
-
-    console.warn(
-      "GitHub load failed. Using local data.",
-      error
-    );
-
-    renderAll();
-  }
-}
-
-
-/* =========================
-   NORMALIZE DATA
-========================= */
-
-function normalizeData(input) {
-
-  const result = {
-    ...structuredClone(defaults),
-    ...input
-  };
-
-
-  result.categories =
-    Array.isArray(input.categories)
-      ? input.categories
-      : structuredClone(defaults.categories);
-
-
-  result.posts =
-    Array.isArray(input.posts)
-      ? input.posts
-      : [];
-
-
-  result.links =
-    Array.isArray(input.links)
-      ? input.links
-      : [];
-
-
-  result.page = {
-    ...defaults.page,
-    ...(input.page || {})
-  };
-
-
-  result.theme = {
-    ...defaults.theme,
-    ...(input.theme || {})
-  };
-
-
-  result.settings = {
-    ...defaults.settings,
-    ...(input.settings || {})
-  };
-
-
-  return result;
-}
-
 
 /* =========================
    HELPERS
@@ -322,50 +62,116 @@ function $(id) {
 }
 
 
-function esc(value = "") {
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
+
+function esc(value = "") {
   return String(value).replace(
     /[&<>"']/g,
-    function (match) {
-
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-      }[match];
-
-    }
+    match => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[match]
   );
+}
+
+
+/* =========================
+   LOCAL DATA
+========================= */
+
+function loadLocal() {
+
+  try {
+
+    const saved =
+      localStorage.getItem(KEY);
+
+    if (!saved) {
+      return clone(defaults);
+    }
+
+    return normalizeData(
+      JSON.parse(saved)
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    return clone(defaults);
+  }
+}
+
+
+function normalizeData(input = {}) {
+
+  return {
+
+    categories:
+      Array.isArray(input.categories)
+        ? input.categories
+        : clone(defaults.categories),
+
+    posts:
+      Array.isArray(input.posts)
+        ? input.posts
+        : [],
+
+    links:
+      Array.isArray(input.links)
+        ? input.links
+        : [],
+
+    page: {
+      ...defaults.page,
+      ...(input.page || {})
+    },
+
+    theme: {
+      ...defaults.theme,
+      ...(input.theme || {})
+    },
+
+    settings: {
+      ...defaults.settings,
+      ...(input.settings || {})
+    }
+
+  };
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+async function save() {
+
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(data)
+  );
+
+  renderAll();
+
+  /*
+    فعلاً فقط نسخه‌ی محلی ذخیره می‌شود.
+    اتصال GitHub را بعداً وصل می‌کنیم.
+  */
+
+  return true;
 }
 
 
 /* =========================
    NAVIGATION
 ========================= */
-
-document
-  .querySelectorAll(".nav-item")
-  .forEach(button => {
-
-    button.onclick = () => {
-      show(button.dataset.view);
-    };
-
-  });
-
-
-document
-  .querySelectorAll("[data-go]")
-  .forEach(button => {
-
-    button.onclick = () => {
-      show(button.dataset.go);
-    };
-
-  });
-
 
 function show(id) {
 
@@ -395,10 +201,56 @@ function show(id) {
     });
 
 
+  /*
+    فقط وقتی دکمه «مطلب جدید» را
+    می‌زنیم ادیتور را خالی می‌کنیم.
+  */
+
   if (id === "editor") {
-    resetEditor();
+
+    if (!$("postId").value) {
+      resetEditor();
+    }
+
   }
+
 }
+
+
+document
+  .querySelectorAll(".nav-item")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function () {
+
+        show(
+          this.dataset.view
+        );
+
+      }
+    );
+
+  });
+
+
+document
+  .querySelectorAll("[data-go]")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function () {
+
+        show(
+          this.dataset.go
+        );
+
+      }
+    );
+
+  });
 
 
 /* =========================
@@ -407,474 +259,17 @@ function show(id) {
 
 if ($("logoutBtn")) {
 
-  $("logoutBtn").onclick = () => {
-
-    alert(
-      "برای خروج از پنل، تب مرورگر را ببندید."
-    );
-
-  };
-
-}
-
-
-/* =========================
-   EDITOR TOOLBAR
-========================= */
-
-document
-  .querySelectorAll("#toolbar button")
-  .forEach(button => {
-
-    button.onclick = () => {
-
-      const command =
-        button.dataset.cmd;
-
-
-      if (command === "createLink") {
-
-        const url =
-          prompt("آدرس لینک:");
-
-        if (url) {
-          document.execCommand(
-            "createLink",
-            false,
-            url
-          );
-        }
-
-      }
-
-
-      else if (
-        command === "insertImage"
-      ) {
-
-        const url =
-          prompt("آدرس تصویر:");
-
-        if (url) {
-
-          document.execCommand(
-            "insertImage",
-            false,
-            url
-          );
-
-        }
-
-      }
-
-
-      else {
-
-        document.execCommand(
-          command,
-          false,
-          button.dataset.value || null
-        );
-
-      }
-
-
-      if ($("postContent")) {
-        $("postContent").focus();
-      }
-
-    };
-
-  });
-
-
-/* =========================
-   EDITOR
-========================= */
-
-function resetEditor() {
-
-  if ($("editorTitle"))
-    $("editorTitle").textContent =
-      "ارسال مطلب";
-
-
-  if ($("postId"))
-    $("postId").value = "";
-
-
-  if ($("postTitle"))
-    $("postTitle").value = "";
-
-
-  if ($("postTags"))
-    $("postTags").value = "";
-
-
-  if ($("postImage"))
-    $("postImage").value = "";
-
-
-  if ($("postContent"))
-    $("postContent").innerHTML = "";
-
-
-  fillCategories();
-}
-
-
-function fillCategories() {
-
-  if (!$("postCategory")) return;
-
-
-  $("postCategory").innerHTML =
-    data.categories
-      .map(
-        category =>
-          `<option value="${esc(category)}">${esc(category)}</option>`
-      )
-      .join("");
-}
-
-
-/* =========================
-   EDIT POST
-========================= */
-
-function editPost(id) {
-
-  const post =
-    data.posts.find(
-      item => item.id == id
-    );
-
-
-  if (!post) return;
-
-
-  show("editor");
-
-
-  $("editorTitle").textContent =
-    "ویرایش مطلب";
-
-
-  $("postId").value =
-    post.id;
-
-
-  $("postTitle").value =
-    post.title || "";
-
-
-  $("postCategory").value =
-    post.category || "";
-
-
-  $("postTags").value =
-    (post.tags || []).join("، ");
-
-
-  $("postImage").value =
-    post.image || "";
-
-
-  $("postContent").innerHTML =
-    post.content || "";
-}
-
-
-/* =========================
-   COLLECT POST
-========================= */
-
-function collect(status) {
-
-  const tags =
-    $("postTags")
-      .value
-      .split(/[,،]/)
-      .map(tag => tag.trim())
-      .filter(Boolean);
-
-
-  return {
-
-    id:
-      Number($("postId").value) ||
-      Date.now(),
-
-    title:
-      $("postTitle").value.trim(),
-
-    category:
-      $("postCategory").value,
-
-    tags,
-
-    image:
-      $("postImage").value.trim(),
-
-    content:
-      $("postContent").innerHTML,
-
-    date:
-      new Intl.DateTimeFormat(
-        "fa-IR",
-        {
-          dateStyle: "medium"
-        }
-      ).format(new Date()),
-
-    time:
-      new Date().toLocaleTimeString(
-        "fa-IR",
-        {
-          hour: "2-digit",
-          minute: "2-digit"
-        }
-      ),
-
-    status
-  };
-}
-
-
-/* =========================
-   POST FORM
-========================= */
-
-if ($("postForm")) {
-
-  $("postForm").onsubmit =
-    async event => {
-
-      event.preventDefault();
-
-
-      const title =
-        $("postTitle").value.trim();
-
-
-      if (!title) {
-
-        alert(
-          "عنوان مطلب را وارد کنید."
-        );
-
-        return;
-      }
-
-
-      await upsert(
-        collect("published")
-      );
-
+  $("logoutBtn").addEventListener(
+    "click",
+    () => {
 
       alert(
-        "مطلب منتشر شد."
+        "برای خروج از پنل، تب مرورگر را ببندید."
       );
 
+    }
+  );
 
-      show("posts");
-    };
-
-}
-
-
-/* =========================
-   DRAFT
-========================= */
-
-if ($("draftBtn")) {
-
-  $("draftBtn").onclick =
-    async () => {
-
-      if (
-        !$("postTitle").value.trim()
-      ) {
-
-        alert(
-          "عنوان مطلب را وارد کنید."
-        );
-
-        return;
-      }
-
-
-      await upsert(
-        collect("draft")
-      );
-
-
-      alert(
-        "پیش‌نویس ذخیره شد."
-      );
-
-
-      show("posts");
-    };
-
-}
-
-
-/* =========================
-   CANCEL
-========================= */
-
-if ($("cancelEdit")) {
-
-  $("cancelEdit").onclick =
-    () => show("posts");
-
-}
-
-
-/* =========================
-   UPSERT
-========================= */
-
-async function upsert(post) {
-
-  const index =
-    data.posts.findIndex(
-      item => item.id === post.id
-    );
-
-
-  if (index >= 0) {
-
-    data.posts[index] =
-      post;
-
-  } else {
-
-    data.posts.unshift(post);
-
-  }
-
-
-  await save();
-}
-
-
-/* =========================
-   POSTS
-========================= */
-
-function renderPosts() {
-
-  const table =
-    $("postsTable");
-
-
-  if (!table) return;
-
-
-  if (!data.posts.length) {
-
-    table.innerHTML =
-      `
-      <tr>
-        <td
-          colspan="5"
-          class="empty"
-        >
-          هنوز مطلبی وجود ندارد.
-        </td>
-      </tr>
-      `;
-
-    return;
-  }
-
-
-  table.innerHTML =
-    data.posts
-      .map(post => {
-
-        const status =
-          post.status === "draft"
-            ? "پیش‌نویس"
-            : "منتشر";
-
-
-        return `
-          <tr>
-
-            <td>
-              ${esc(post.title)}
-            </td>
-
-            <td>
-              ${esc(post.category)}
-            </td>
-
-            <td>
-              ${esc(post.date)}
-            </td>
-
-            <td>
-              <span
-                class="status ${
-                  post.status === "draft"
-                    ? "draft"
-                    : ""
-                }"
-              >
-                ${status}
-              </span>
-            </td>
-
-            <td class="row-actions">
-
-              <button
-                onclick="editPost(${post.id})"
-              >
-                ویرایش
-              </button>
-
-              <button
-                class="danger"
-                onclick="deletePost(${post.id})"
-              >
-                حذف
-              </button>
-
-            </td>
-
-          </tr>
-        `;
-
-      })
-      .join("");
-}
-
-
-/* =========================
-   DELETE POST
-========================= */
-
-async function deletePost(id) {
-
-  if (
-    !confirm(
-      "این مطلب حذف شود؟"
-    )
-  ) {
-    return;
-  }
-
-
-  data.posts =
-    data.posts.filter(
-      post => post.id != id
-    );
-
-
-  await save();
 }
 
 
@@ -882,69 +277,112 @@ async function deletePost(id) {
    CATEGORIES
 ========================= */
 
+function fillCategories() {
+
+  const select =
+    $("postCategory");
+
+  if (!select) return;
+
+  select.innerHTML =
+    data.categories
+      .map(category => `
+        <option value="${esc(category)}">
+          ${esc(category)}
+        </option>
+      `)
+      .join("");
+
+}
+
+
 function renderCategories() {
 
   const list =
     $("categoryList");
 
-
   if (!list) return;
-
 
   list.innerHTML =
     data.categories
-      .map(
-        (category, index) => `
-          <li>
+      .map((category, index) => `
+        <li>
 
-            <span>
-              ${esc(category)}
-            </span>
+          <span>
+            ${esc(category)}
+          </span>
 
-            <button
-              class="danger"
-              onclick="deleteCategory(${index})"
-            >
-              حذف
-            </button>
+          <button
+            type="button"
+            class="danger"
+            data-delete-category="${index}"
+          >
+            حذف
+          </button>
 
-          </li>
-        `
-      )
+        </li>
+      `)
       .join("");
 
+  list
+    .querySelectorAll(
+      "[data-delete-category]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          deleteCategory(
+            Number(
+              button.dataset.deleteCategory
+            )
+          );
+
+        }
+      );
+
+    });
 
   fillCategories();
+
 }
 
 
 if ($("addCategory")) {
 
-  $("addCategory").onclick =
+  $("addCategory").addEventListener(
+    "click",
     async () => {
 
-      const value =
-        $("newCategory")
-          .value
-          .trim();
+      const input =
+        $("newCategory");
 
+      const value =
+        input.value.trim();
+
+      if (!value) return;
 
       if (
-        !value ||
         data.categories.includes(value)
       ) {
+
+        alert(
+          "این موضوع قبلاً وجود دارد."
+        );
+
         return;
       }
 
-
       data.categories.push(value);
 
-
-      $("newCategory").value = "";
-
+      input.value = "";
 
       await save();
-    };
+
+    }
+  );
 
 }
 
@@ -962,14 +400,418 @@ async function deleteCategory(index) {
     return;
   }
 
-
   data.categories.splice(
     index,
     1
   );
 
+  await save();
+
+}
+
+
+/* =========================
+   EDITOR
+========================= */
+
+function resetEditor() {
+
+  if ($("editorTitle"))
+    $("editorTitle").textContent =
+      "ارسال مطلب";
+
+  if ($("postId"))
+    $("postId").value = "";
+
+  if ($("postTitle"))
+    $("postTitle").value = "";
+
+  if ($("postTags"))
+    $("postTags").value = "";
+
+  if ($("postImage"))
+    $("postImage").value = "";
+
+  if ($("postContent"))
+    $("postContent").innerHTML = "";
+
+  fillCategories();
+
+}
+
+
+function collectPost(status) {
+
+  const tags =
+    $("postTags")
+      .value
+      .split(/[,،]/)
+      .map(tag => tag.trim())
+      .filter(Boolean);
+
+  const now =
+    new Date();
+
+  return {
+
+    id:
+      Number($("postId").value) ||
+      Date.now(),
+
+    title:
+      $("postTitle")
+        .value
+        .trim(),
+
+    category:
+      $("postCategory")
+        .value,
+
+    tags,
+
+    image:
+      $("postImage")
+        .value
+        .trim(),
+
+    content:
+      $("postContent")
+        .innerHTML,
+
+    date:
+      new Intl.DateTimeFormat(
+        "fa-IR",
+        {
+          dateStyle: "medium"
+        }
+      ).format(now),
+
+    time:
+      new Intl.DateTimeFormat(
+        "fa-IR",
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      ).format(now),
+
+    status
+
+  };
+
+}
+
+
+if ($("postForm")) {
+
+  $("postForm").addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      if (
+        !$("postTitle")
+          .value
+          .trim()
+      ) {
+
+        alert(
+          "عنوان مطلب را وارد کنید."
+        );
+
+        return;
+      }
+
+      await upsert(
+        collectPost("published")
+      );
+
+      alert(
+        "مطلب منتشر شد."
+      );
+
+      resetEditor();
+
+      show("posts");
+
+    }
+  );
+
+}
+
+
+if ($("draftBtn")) {
+
+  $("draftBtn").addEventListener(
+    "click",
+    async () => {
+
+      if (
+        !$("postTitle")
+          .value
+          .trim()
+      ) {
+
+        alert(
+          "عنوان مطلب را وارد کنید."
+        );
+
+        return;
+      }
+
+      await upsert(
+        collectPost("draft")
+      );
+
+      alert(
+        "پیش‌نویس ذخیره شد."
+      );
+
+      resetEditor();
+
+      show("posts");
+
+    }
+  );
+
+}
+
+
+if ($("cancelEdit")) {
+
+  $("cancelEdit").addEventListener(
+    "click",
+    () => {
+
+      resetEditor();
+
+      show("posts");
+
+    }
+  );
+
+}
+
+
+async function upsert(post) {
+
+  const index =
+    data.posts.findIndex(
+      item => item.id === post.id
+    );
+
+  if (index === -1) {
+
+    data.posts.unshift(post);
+
+  } else {
+
+    data.posts[index] = post;
+
+  }
 
   await save();
+
+}
+
+
+/* =========================
+   EDIT POST
+========================= */
+
+function editPost(id) {
+
+  const post =
+    data.posts.find(
+      item => item.id == id
+    );
+
+  if (!post) return;
+
+  $("editorTitle").textContent =
+    "ویرایش مطلب";
+
+  $("postId").value =
+    post.id;
+
+  $("postTitle").value =
+    post.title || "";
+
+  $("postTags").value =
+    (post.tags || []).join("، ");
+
+  $("postImage").value =
+    post.image || "";
+
+  $("postContent").innerHTML =
+    post.content || "";
+
+  fillCategories();
+
+  $("postCategory").value =
+    post.category || "";
+
+  show("editor");
+
+}
+
+
+window.editPost = editPost;
+
+
+/* =========================
+   DELETE POST
+========================= */
+
+async function deletePost(id) {
+
+  if (
+    !confirm(
+      "این مطلب حذف شود؟"
+    )
+  ) return;
+
+  data.posts =
+    data.posts.filter(
+      post => post.id != id
+    );
+
+  await save();
+
+}
+
+
+window.deletePost = deletePost;
+
+
+/* =========================
+   POSTS
+========================= */
+
+function renderPosts() {
+
+  const table =
+    $("postsTable");
+
+  if (!table) return;
+
+  if (!data.posts.length) {
+
+    table.innerHTML = `
+      <tr>
+        <td
+          colspan="5"
+          class="empty"
+        >
+          هنوز مطلبی وجود ندارد.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+
+  table.innerHTML =
+    data.posts
+      .map(post => {
+
+        const status =
+          post.status === "draft"
+            ? "پیش‌نویس"
+            : "منتشر";
+
+        return `
+          <tr>
+
+            <td>
+              ${esc(post.title)}
+            </td>
+
+            <td>
+              ${esc(post.category)}
+            </td>
+
+            <td>
+              ${esc(post.date)}
+            </td>
+
+            <td>
+              <span class="status ${
+                post.status === "draft"
+                  ? "draft"
+                  : ""
+              }">
+                ${status}
+              </span>
+            </td>
+
+            <td class="row-actions">
+
+              <button
+                type="button"
+                data-edit="${post.id}"
+              >
+                ویرایش
+              </button>
+
+              <button
+                type="button"
+                class="danger"
+                data-delete="${post.id}"
+              >
+                حذف
+              </button>
+
+            </td>
+
+          </tr>
+        `;
+
+      })
+      .join("");
+
+
+  table
+    .querySelectorAll(
+      "[data-edit]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          editPost(
+            button.dataset.edit
+          );
+
+        }
+      );
+
+    });
+
+
+  table
+    .querySelectorAll(
+      "[data-delete]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          deletePost(
+            button.dataset.delete
+          );
+
+        }
+      );
+
+    });
+
 }
 
 
@@ -982,12 +824,9 @@ function renderTags() {
   const cloud =
     $("tagCloud");
 
-
   if (!cloud) return;
 
-
   const counts = {};
-
 
   data.posts.forEach(post => {
 
@@ -1006,12 +845,11 @@ function renderTags() {
     !Object.keys(counts).length
   ) {
 
-    cloud.innerHTML =
-      `
+    cloud.innerHTML = `
       <div class="empty">
         هنوز برچسبی ساخته نشده.
       </div>
-      `;
+    `;
 
     return;
   }
@@ -1019,18 +857,14 @@ function renderTags() {
 
   cloud.innerHTML =
     Object.entries(counts)
-      .map(
-        ([tag, count]) =>
-          `
-          <span>
-            ${esc(tag)}
-            <small>
-              (${count})
-            </small>
-          </span>
-          `
-      )
+      .map(([tag, count]) => `
+        <span>
+          ${esc(tag)}
+          <small>(${count})</small>
+        </span>
+      `)
       .join("");
+
 }
 
 
@@ -1043,41 +877,62 @@ function renderLinks() {
   const list =
     $("linkList");
 
-
   if (!list) return;
-
 
   list.innerHTML =
     data.links
-      .map(
-        (link, index) => `
-          <li>
+      .map((link, index) => `
+        <li>
 
-            <a
-              href="${esc(link.url)}"
-              target="_blank"
-              rel="noopener"
-            >
-              ${esc(link.title)}
-            </a>
+          <a
+            href="${esc(link.url)}"
+            target="_blank"
+            rel="noopener"
+          >
+            ${esc(link.title)}
+          </a>
 
-            <button
-              class="danger"
-              onclick="deleteLink(${index})"
-            >
-              حذف
-            </button>
+          <button
+            type="button"
+            class="danger"
+            data-delete-link="${index}"
+          >
+            حذف
+          </button>
 
-          </li>
-        `
-      )
+        </li>
+      `)
       .join("");
+
+
+  list
+    .querySelectorAll(
+      "[data-delete-link]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          deleteLink(
+            Number(
+              button.dataset.deleteLink
+            )
+          );
+
+        }
+      );
+
+    });
+
 }
 
 
 if ($("addLink")) {
 
-  $("addLink").onclick =
+  $("addLink").addEventListener(
+    "click",
     async () => {
 
       const title =
@@ -1085,30 +940,25 @@ if ($("addLink")) {
           .value
           .trim();
 
-
       const url =
         $("linkUrl")
           .value
           .trim();
 
-
-      if (!title || !url) {
-        return;
-      }
-
+      if (!title || !url) return;
 
       data.links.push({
         title,
         url
       });
 
-
       $("linkTitle").value = "";
       $("linkUrl").value = "";
 
-
       await save();
-    };
+
+    }
+  );
 
 }
 
@@ -1120,8 +970,8 @@ async function deleteLink(index) {
     1
   );
 
-
   await save();
+
 }
 
 
@@ -1134,121 +984,97 @@ function loadTheme() {
   const theme =
     data.theme;
 
-
   if ($("themeBg"))
     $("themeBg").value =
-      theme.bg;
-
+      theme.bg || "";
 
   if ($("themeFg"))
     $("themeFg").value =
-      theme.fg;
-
+      theme.fg || "";
 
   if ($("themeTitle"))
     $("themeTitle").value =
-      theme.title;
-
+      theme.title || "";
 
   if ($("themeDesc"))
     $("themeDesc").value =
-      theme.desc;
-
+      theme.desc || "";
 
   if ($("showAbout"))
     $("showAbout").checked =
-      theme.about;
-
+      !!theme.about;
 
   if ($("showLinks"))
     $("showLinks").checked =
-      theme.links;
-
+      !!theme.links;
 
   if ($("showTags"))
     $("showTags").checked =
-      theme.tags;
-
+      !!theme.tags;
 
   if ($("showArchive"))
     $("showArchive").checked =
-      theme.archive;
-
+      !!theme.archive;
 
   if ($("showCategories"))
     $("showCategories").checked =
-      theme.categories;
-
+      !!theme.categories;
 
   if ($("customCss"))
     $("customCss").value =
       theme.css || "";
 
-
-  renderPreview();
-}
-
-
-/* =========================
-   SAVE THEME
-========================= */
-
-async function saveTheme() {
-
-  data.theme = {
-
-    bg:
-      $("themeBg").value.trim() ||
-      "#335C67",
-
-    fg:
-      $("themeFg").value.trim() ||
-      "#FEF4AF",
-
-    title:
-      $("themeTitle").value,
-
-    desc:
-      $("themeDesc").value,
-
-    about:
-      $("showAbout").checked,
-
-    links:
-      $("showLinks").checked,
-
-    tags:
-      $("showTags").checked,
-
-    archive:
-      $("showArchive").checked,
-
-    categories:
-      $("showCategories").checked,
-
-    css:
-      $("customCss").value
-  };
-
-
-  const success =
-    await save();
-
-
-  if (success) {
-
-    alert(
-      "تنظیمات قالب ذخیره شد."
-    );
-
-  }
 }
 
 
 if ($("saveTheme")) {
 
-  $("saveTheme").onclick =
-    saveTheme;
+  $("saveTheme").addEventListener(
+    "click",
+    async () => {
+
+      data.theme = {
+
+        bg:
+          $("themeBg").value.trim(),
+
+        fg:
+          $("themeFg").value.trim(),
+
+        title:
+          $("themeTitle").value,
+
+        desc:
+          $("themeDesc").value,
+
+        about:
+          $("showAbout").checked,
+
+        links:
+          $("showLinks").checked,
+
+        tags:
+          $("showTags").checked,
+
+        archive:
+          $("showArchive").checked,
+
+        categories:
+          $("showCategories").checked,
+
+        css:
+          $("customCss").value
+
+      };
+
+      await save();
+
+      alert(
+        "تنظیمات قالب ذخیره شد."
+      );
+
+    }
+  );
 
 }
 
@@ -1256,6 +1082,113 @@ if ($("saveTheme")) {
 /* =========================
    THEME PREVIEW
 ========================= */
+
+function renderPreview() {
+
+  if (!$("preview")) return;
+
+  const bg =
+    $("themeBg")?.value ||
+    "#335C67";
+
+  const fg =
+    $("themeFg")?.value ||
+    "#FEF4AF";
+
+  const title =
+    $("themeTitle")?.value ||
+    "Homo Irrealis";
+
+  const desc =
+    $("themeDesc")?.value ||
+    "";
+
+  const css =
+    $("customCss")?.value ||
+    "";
+
+  const posts =
+    data.posts
+      .slice(0, 3)
+      .map(post => `
+        <article>
+          <h3>
+            ${esc(post.title)}
+          </h3>
+
+          ${post.content || ""}
+        </article>
+      `)
+      .join("");
+
+
+  $("preview").srcdoc = `
+    <!doctype html>
+
+    <html lang="fa" dir="rtl">
+
+    <head>
+
+      <meta charset="UTF-8">
+
+      <style>
+
+        body {
+          margin: 0;
+          padding: 25px;
+          background: ${esc(bg)};
+          color: ${esc(fg)};
+          font-family: Arial, sans-serif;
+        }
+
+        header {
+          text-align: center;
+          padding: 15px;
+          border-bottom:
+            1px solid ${esc(fg)};
+        }
+
+        article {
+          max-width: 500px;
+          margin: 15px auto;
+          padding: 15px;
+          border:
+            1px solid ${esc(fg)};
+        }
+
+        a {
+          color: ${esc(fg)};
+        }
+
+        ${css}
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <header>
+
+        <h1>
+          ${esc(title)}
+        </h1>
+
+        <p>
+          ${esc(desc)}
+        </p>
+
+      </header>
+
+      ${posts}
+
+    </body>
+
+    </html>
+  `;
+
+}
+
 
 [
   "themeBg",
@@ -1268,14 +1201,12 @@ if ($("saveTheme")) {
 
   const element = $(id);
 
-  if (element) {
+  if (!element) return;
 
-    element.addEventListener(
-      "input",
-      renderPreview
-    );
-
-  }
+  element.addEventListener(
+    "input",
+    renderPreview
+  );
 
 });
 
@@ -1291,143 +1222,14 @@ if ($("saveTheme")) {
 
   const element = $(id);
 
-  if (element) {
+  if (!element) return;
 
-    element.addEventListener(
-      "change",
-      renderPreview
-    );
-
-  }
+  element.addEventListener(
+    "change",
+    renderPreview
+  );
 
 });
-
-
-function renderPreview() {
-
-  if (!$("preview")) return;
-
-
-  const theme = {
-
-    bg:
-      $("themeBg")?.value ||
-      "#335C67",
-
-    fg:
-      $("themeFg")?.value ||
-      "#FEF4AF",
-
-    title:
-      $("themeTitle")?.value ||
-      "Homo Irrealis",
-
-    desc:
-      $("themeDesc")?.value ||
-      "",
-
-    css:
-      $("customCss")?.value ||
-      ""
-  };
-
-
-  const posts =
-    data.posts
-      .slice(0, 3)
-      .map(
-        post => `
-          <article>
-
-            <h3>
-              ${esc(post.title)}
-            </h3>
-
-            <div>
-              ${post.content || ""}
-            </div>
-
-          </article>
-        `
-      )
-      .join("");
-
-
-  $("preview").srcdoc =
-    `
-    <!doctype html>
-
-    <html
-      lang="fa"
-      dir="rtl"
-    >
-
-    <head>
-
-      <meta
-        charset="UTF-8"
-      >
-
-      <style>
-
-        body {
-          margin: 0;
-          background: ${esc(theme.bg)};
-          color: ${esc(theme.fg)};
-          font-family: Arial, sans-serif;
-          padding: 25px;
-        }
-
-        header {
-          text-align: center;
-          border-bottom:
-            1px solid ${esc(theme.fg)};
-          padding: 12px;
-        }
-
-        h1 {
-          font-size: 28px;
-        }
-
-        article {
-          border:
-            1px solid ${esc(theme.fg)};
-          padding: 12px;
-          margin: 12px auto;
-          max-width: 380px;
-        }
-
-        a {
-          color: ${esc(theme.fg)};
-        }
-
-        ${theme.css}
-
-      </style>
-
-    </head>
-
-    <body>
-
-      <header>
-
-        <h1>
-          ${esc(theme.title)}
-        </h1>
-
-        <p>
-          ${esc(theme.desc)}
-        </p>
-
-      </header>
-
-      ${posts}
-
-    </body>
-
-    </html>
-    `;
-}
 
 
 /* =========================
@@ -1436,7 +1238,8 @@ function renderPreview() {
 
 if ($("savePage")) {
 
-  $("savePage").onclick =
+  $("savePage").addEventListener(
+    "click",
     async () => {
 
       data.page = {
@@ -1446,21 +1249,17 @@ if ($("savePage")) {
 
         content:
           $("pageContent").value
+
       };
 
+      await save();
 
-      const success =
-        await save();
+      alert(
+        "صفحه ذخیره شد."
+      );
 
-
-      if (success) {
-
-        alert(
-          "صفحه ذخیره شد."
-        );
-
-      }
-    };
+    }
+  );
 
 }
 
@@ -1471,7 +1270,8 @@ if ($("savePage")) {
 
 if ($("saveSettings")) {
 
-  $("saveSettings").onclick =
+  $("saveSettings").addEventListener(
+    "click",
     async () => {
 
       data.settings = {
@@ -1481,27 +1281,99 @@ if ($("saveSettings")) {
 
         panel:
           $("panelTitle").value
+
       };
 
+      await save();
 
-      const success =
-        await save();
+      alert(
+        "تنظیمات ذخیره شد."
+      );
 
-
-      if (success) {
-
-        alert(
-          "تنظیمات ذخیره شد."
-        );
-
-      }
-    };
+    }
+  );
 
 }
 
 
 /* =========================
-   RENDER ALL
+   TOOLBAR
+========================= */
+
+document
+  .querySelectorAll(
+    "#toolbar button"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        const command =
+          button.dataset.cmd;
+
+        if (
+          command === "createLink"
+        ) {
+
+          const url =
+            prompt(
+              "آدرس لینک:"
+            );
+
+          if (url) {
+
+            document.execCommand(
+              "createLink",
+              false,
+              url
+            );
+
+          }
+
+        }
+
+        else if (
+          command === "insertImage"
+        ) {
+
+          const url =
+            prompt(
+              "آدرس تصویر:"
+            );
+
+          if (url) {
+
+            document.execCommand(
+              "insertImage",
+              false,
+              url
+            );
+
+          }
+
+        }
+
+        else {
+
+          document.execCommand(
+            command,
+            false,
+            button.dataset.value ||
+            null
+          );
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================
+   RENDER
 ========================= */
 
 function renderAll() {
@@ -1516,7 +1388,6 @@ function renderAll() {
 
   }
 
-
   if ($("statDrafts")) {
 
     $("statDrafts").textContent =
@@ -1527,14 +1398,12 @@ function renderAll() {
 
   }
 
-
   if ($("statCats")) {
 
     $("statCats").textContent =
       data.categories.length;
 
   }
-
 
   if ($("statTags")) {
 
@@ -1546,42 +1415,33 @@ function renderAll() {
         )
       );
 
-
     $("statTags").textContent =
       tags.size;
+
   }
 
-
   renderPosts();
-
   renderCategories();
-
   renderTags();
-
   renderLinks();
-
+  loadTheme();
 
   if ($("pageTitle"))
     $("pageTitle").value =
       data.page.title || "";
 
-
   if ($("pageContent"))
     $("pageContent").value =
       data.page.content || "";
-
 
   if ($("adminName"))
     $("adminName").value =
       data.settings.admin || "";
 
-
   if ($("panelTitle"))
     $("panelTitle").value =
       data.settings.panel || "";
 
-
-  loadTheme();
 }
 
 
@@ -1591,6 +1451,6 @@ function renderAll() {
 
 renderAll();
 
-loadFromGitHub();
-
-console.log("HOMO IRREALIS APP.JS LOADED");
+console.log(
+  "Homo Irrealis Admin loaded successfully."
+);
