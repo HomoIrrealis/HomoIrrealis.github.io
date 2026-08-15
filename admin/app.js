@@ -8,9 +8,39 @@ let data=load();
 const API = "https://homoirrealis.netlify.app/.netlify/functions/github";
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
-async function save(){
-  localStorage.setItem(KEY,JSON.stringify(data));
+async 
+  async function save(){
+  localStorage.setItem(KEY, JSON.stringify(data));
   renderAll();
+
+  try {
+    const response = await fetch(
+      "https://homoirrealis.netlify.app/.netlify/functions/github?file=admin/data.json",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: JSON.stringify(data, null, 2),
+          message: "Update blog data"
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "GitHub save failed");
+    }
+
+    console.log("Saved to GitHub");
+
+  } catch(error) {
+    console.error(error);
+    alert("ذخیره روی GitHub انجام نشد.");
+  }
+  }
 
   try {
     await fetch(API, {
