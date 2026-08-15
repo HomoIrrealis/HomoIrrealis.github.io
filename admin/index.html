@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>پنل مدیریت — Homo Irrealis</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Homo Irrealis</div>
+  <div class="top-actions">
+    <a href="../index.html" target="_blank">مشاهده وبلاگ</a>
+    <button id="logoutBtn" type="button">خروج</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="profile-mini">
+      <div class="avatar">H</div>
+      <div><strong>مدیریت وبلاگ</strong><small>Homo Irrealis</small></div>
+    </div>
+
+    <nav>
+      <button class="nav-item active" data-view="dashboard">میزکار</button>
+      <button class="nav-item" data-view="editor">ارسال مطلب</button>
+      <button class="nav-item" data-view="posts">مدیریت مطالب</button>
+      <button class="nav-item" data-view="categories">موضوعات</button>
+      <button class="nav-item" data-view="tags">برچسب‌ها</button>
+      <button class="nav-item" data-view="links">پیوندها</button>
+      <button class="nav-item" data-view="pages">صفحات</button>
+      <button class="nav-item" data-view="theme">ویرایش قالب</button>
+      <button class="nav-item" data-view="settings">تنظیمات</button>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <section id="dashboard" class="view active">
+      <div class="page-head"><div><h1>میزکار</h1><p>مدیریت Homo Irrealis</p></div></div>
+      <div class="cards">
+        <div class="stat"><span>مطالب</span><b id="statPosts">0</b></div>
+        <div class="stat"><span>پیش‌نویس</span><b id="statDrafts">0</b></div>
+        <div class="stat"><span>موضوعات</span><b id="statCats">0</b></div>
+        <div class="stat"><span>برچسب‌ها</span><b id="statTags">0</b></div>
+      </div>
+      <div class="panel">
+        <h2>دسترسی سریع</h2>
+        <div class="quick">
+          <button class="primary" data-go="editor">+ ارسال مطلب جدید</button>
+          <button data-go="posts">مدیریت مطالب</button>
+          <button data-go="theme">ویرایش قالب</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="editor" class="view">
+      <div class="page-head"><div><h1 id="editorTitle">ارسال مطلب</h1><p>مطلب جدید بنویسید یا یک مطلب موجود را ویرایش کنید.</p></div></div>
+      <form id="postForm" class="panel">
+        <input type="hidden" id="postId">
+        <label>عنوان مطلب</label>
+        <input id="postTitle" required placeholder="عنوان مطلب را وارد کنید">
+
+        <div class="two">
+          <div><label>موضوع</label><select id="postCategory"></select></div>
+          <div><label>تصویر پیش‌نمایش</label><input id="postImage" placeholder="آدرس تصویر (اختیاری)"></div>
+        </div>
+
+        <label>برچسب‌ها</label>
+        <input id="postTags" placeholder="برچسب‌ها را با ویرگول جدا کنید">
+
+        <label>متن مطلب</label>
+        <div class="toolbar" id="toolbar">
+          <button type="button" data-cmd="bold"><b>B</b></button>
+          <button type="button" data-cmd="italic"><i>I</i></button>
+          <button type="button" data-cmd="underline"><u>U</u></button>
+          <button type="button" data-cmd="formatBlock" data-value="h2">H2</button>
+          <button type="button" data-cmd="formatBlock" data-value="blockquote">❝</button>
+          <button type="button" data-cmd="createLink">لینک</button>
+          <button type="button" data-cmd="insertImage">تصویر</button>
+          <button type="button" data-cmd="insertUnorderedList">• لیست</button>
+        </div>
+        <div id="postContent" class="editor" contenteditable="true"></div>
+
+        <div class="form-actions">
+          <button type="button" id="draftBtn">ذخیره پیش‌نویس</button>
+          <button type="submit" class="primary">انتشار مطلب</button>
+          <button type="button" id="cancelEdit" class="ghost">لغو</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="posts" class="view">
+      <div class="page-head"><div><h1>مدیریت مطالب</h1><p>مطالب منتشرشده و پیش‌نویس‌ها</p></div><button class="primary" data-go="editor">+ مطلب جدید</button></div>
+      <div class="panel table-wrap"><table><thead><tr><th>عنوان</th><th>موضوع</th><th>تاریخ</th><th>وضعیت</th><th></th></tr></thead><tbody id="postsTable"></tbody></table></div>
+    </section>
+
+    <section id="categories" class="view">
+      <div class="page-head"><div><h1>موضوعات</h1><p>دسته‌بندی مطالب وبلاگ</p></div></div>
+      <div class="panel">
+        <div class="inline-add"><input id="newCategory" placeholder="نام موضوع"><button class="primary" id="addCategory">افزودن</button></div>
+        <ul id="categoryList" class="simple-list"></ul>
+      </div>
+    </section>
+
+    <section id="tags" class="view">
+      <div class="page-head"><div><h1>برچسب‌ها</h1><p>برچسب‌های استفاده‌شده در مطالب</p></div></div>
+      <div class="panel"><div id="tagCloud" class="tag-cloud"></div></div>
+    </section>
+
+    <section id="links" class="view">
+      <div class="page-head"><div><h1>پیوندها</h1><p>پیوندهای بخش ایمٰاژ</p></div></div>
+      <div class="panel">
+        <div class="two"><input id="linkTitle" placeholder="عنوان"><input id="linkUrl" placeholder="https://..."></div>
+        <button class="primary" id="addLink">افزودن پیوند</button>
+        <ul id="linkList" class="simple-list"></ul>
+      </div>
+    </section>
+
+    <section id="pages" class="view">
+      <div class="page-head"><div><h1>صفحات</h1><p>صفحات ثابت وبلاگ</p></div></div>
+      <div class="panel">
+        <label>عنوان صفحه</label><input id="pageTitle" value="مَن">
+        <label>محتوا</label><textarea id="pageContent" rows="10" placeholder="محتوای صفحه..."></textarea>
+        <button class="primary" id="savePage">ذخیره صفحه</button>
+      </div>
+    </section>
+
+    <section id="theme" class="view">
+      <div class="page-head"><div><h1>ویرایش قالب</h1><p>تنظیمات ظاهری قالب Homo Irrealis</p></div><button class="primary" id="saveTheme">ذخیره تغییرات</button></div>
+      <div class="theme-grid">
+        <div class="panel">
+          <h2>رنگ‌ها</h2>
+          <label>پس‌زمینه</label><input id="themeBg" type="text">
+          <label>رنگ متن و خطوط</label><input id="themeFg" type="text">
+          <h2>متن‌های اصلی</h2>
+          <label>عنوان وبلاگ</label><input id="themeTitle" type="text">
+          <label>توضیحات</label><input id="themeDesc" type="text">
+        </div>
+        <div class="panel">
+          <h2>بخش‌های منو</h2>
+          <label class="check"><input id="showAbout" type="checkbox"> مَن</label>
+          <label class="check"><input id="showLinks" type="checkbox"> ایمٰاژ</label>
+          <label class="check"><input id="showTags" type="checkbox"> تَگ‌ها</label>
+          <label class="check"><input id="showArchive" type="checkbox"> آرشیو</label>
+          <label class="check"><input id="showCategories" type="checkbox"> آثار</label>
+          <h2>CSS سفارشی</h2>
+          <textarea id="customCss" rows="9" placeholder="CSS سفارشی خودت را اینجا بنویس..."></textarea>
+        </div>
+      </div>
+      <div class="panel preview-panel"><h2>پیش‌نمایش</h2><iframe id="preview" title="پیش‌نمایش قالب"></iframe></div>
+    </section>
+
+    <section id="settings" class="view">
+      <div class="page-head"><div><h1>تنظیمات</h1><p>تنظیمات عمومی پنل و وبلاگ</p></div></div>
+      <div class="panel">
+        <label>نام مدیر</label><input id="adminName" value="DIAN">
+        <label>عنوان پنل</label><input id="panelTitle" value="Homo Irrealis">
+        <p class="notice">نسخه فعلی پنل، داده‌ها را در مرورگر ذخیره می‌کند. در مرحله اتصال GitHub، همین رابط به انتشار واقعی فایل‌های repository متصل می‌شود.</p>
+        <button class="primary" id="saveSettings">ذخیره تنظیمات</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
