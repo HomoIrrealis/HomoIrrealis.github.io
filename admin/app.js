@@ -1592,3 +1592,5 @@ function renderAll() {
 renderAll();
 
 loadFromGitHub();
+
+console.log("HOMO IRREALIS APP.JS LOADED");
