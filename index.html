@@ -1,40 +1,1713 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دفتر روایت — نشریه‌ی کلمات</title>
-<meta name="description" content="نشریه‌ای برای علاقه‌مندان به نوشتن، روایت و قصه‌گویی؛ چاپ هر یکشنبه.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="assets/css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Homo Irrealis</title>
+
+<meta name="description" content="Homo Irrealis">
+<meta name="author" content="DIAN">
+
+<style>
+
+/* =========================
+   FONTS
+   ========================= */
+
+@font-face {
+    font-family: "Melodrame";
+    src: url("https://raw.githubusercontent.com/HomoIrrealis/HomoIrrealis.github.io/main/assets/fonts/Relationship%20of%20m%C3%A9lodrame.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Lion";
+    src: url("https://raw.githubusercontent.com/HomoIrrealis/HomoIrrealis.github.io/main/assets/fonts/Lion.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Abar";
+    src: url("https://raw.githubusercontent.com/HomoIrrealis/HomoIrrealis.github.io/main/assets/fonts/AbarHigh-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Azar";
+    src: url("https://raw.githubusercontent.com/HomoIrrealis/HomoIrrealis.github.io/main/assets/fonts/Azar.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* =========================
+   MAIN PAGE
+   ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+
+    font-family: "Abar", sans-serif;
+    color: #FEF4AF;
+    background: #335C67;
+}
+
+
+/* =========================
+   MAIN CONTAINERS
+   ========================= */
+
+#Grannyone {
+    width: 520px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#Granny {
+    width: 400px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    border: 1px solid #FEF4AF;
+}
+
+
+/* =========================
+   LINKS
+   ========================= */
+
+a {
+    font-family: "Lion", sans-serif;
+
+    color: #FEF4AF;
+    text-decoration: none;
+
+    transition: .1s;
+}
+
+a:hover {
+    color: #FEF4AF;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #FEF4AF;
+}
+
+
+/* =========================
+   PAGE NAVIGATION
+   ========================= */
+
+#no {
+    height: 20px;
+    width: 380px;
+
+    float: right;
+
+    padding: 2px;
+    padding-bottom: 0;
+    padding-top: 3px;
+
+    margin-bottom: 35px;
+    margin-right: 10px;
+}
+
+
+/* =========================
+   POSTS GRID
+   ========================= */
+
+.posts-grid {
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+    align-items: flex-start;
+
+    gap: 14px;
+}
+
+
+/* =========================
+   POST ITEMS
+   ========================= */
+
+.post-item {
+    width: calc(50% - 7px);
+
+    box-sizing: border-box;
+
+    margin: 0;
+}
+
+
+/* =========================
+   FIXED POST
+   ========================= */
+
+.post-item:first-child {
+    width: 100%;
+    margin: 0;
+}
+
+
+/* =========================
+   POST BOX
+   ========================= */
+
+.post-item .Main {
+
+    direction: ltr;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #FEF4AF;
+
+    margin: 0;
+
+    padding-right: 0;
+}
+
+.post-item:first-child .Main {
+    padding-right: 5px;
+}
+
+
+/* =========================
+   NORMAL POSTS
+   ========================= */
+
+.post-item:not(:first-child) .Main {
+    min-height: 190px;
+}
+
+
+/* =========================
+   POST
+   ========================= */
+
+.MP {
+    padding-bottom: 10px;
+}
+
+.Mc {
+    padding-bottom: 2px;
+
+    font-size: 7pt;
+
+    direction: rtl;
+
+    color: #FEF4AF;
+
+    text-align: right;
+
+    letter-spacing: 1px;
+
+    font-family: "Lion", sans-serif;
+}
+
+.post-item:not(:first-child) .Mc {
+    display: none;
+}
+
+
+/* =========================
+   POST TITLE
+   ========================= */
+
+.THP {
+
+    font-size: 15px;
+
+    text-align: right;
+
+    padding-top: 5px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    font-weight: bold;
+
+    direction: rtl;
+
+    font-family: "Lion", sans-serif;
+}
+
+.post-item:not(:first-child) .THP {
+
+    text-align: center;
+
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+/* =========================
+   POST CONTENT
+   ========================= */
+
+.PTB {
+
+    width: 100%;
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    direction: rtl;
+
+    padding: 1px;
+
+    font-size: 13px;
+
+    text-align: right;
+
+    line-height: 155%;
+
+    padding-top: 10px;
+    padding-right: 0;
+
+    font-family: "Abar", sans-serif;
+}
+
+.post-item:not(:first-child) .MP {
+    display: none;
+}
+
+
+/* =========================
+   POST CONTENT IMAGES
+   ========================= */
+
+.PTB img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* =========================
+   PREVIEW IMAGE
+   ========================= */
+
+.preview-image {
+
+    width: 160px;
+    height: 120px;
+
+    object-fit: cover;
+
+    display: block;
+
+    margin: 12px auto 10px auto;
+
+    border: 1px solid #FEF4AF;
+
+    box-sizing: border-box;
+}
+
+.preview-no-image {
+
+    width: 160px;
+    height: 120px;
+
+    margin: 12px auto 10px auto;
+
+    border: 1px solid #FEF4AF;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-family: "Lion", sans-serif;
+
+    font-size: 9pt;
+
+    direction: rtl;
+}
+
+
+/* =========================
+   VIEW TEXT BUTTON
+   ========================= */
+
+.preview-link {
+
+    display: block;
+
+    width: fit-content;
+
+    margin: 8px auto 12px auto;
+
+    padding: 4px 9px;
+
+    border: 1px solid #FEF4AF;
+
+    font-family: "Lion", sans-serif;
+
+    font-size: 9pt;
+
+    color: #335C67 !important;
+
+    background: #FEF4AF;
+
+    text-decoration: none;
+
+    direction: rtl;
+
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+.preview-link:hover {
+
+    color: #FEF4AF !important;
+
+    background: #335C67;
+
+    text-decoration: none;
+}
+
+
+/* =========================
+   TITLES
+   ========================= */
+
+.Titlebox {
+
+    font-size: 14pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    direction: rtl;
+
+    text-align: center;
+
+    margin-bottom: 10px;
+}
+
+
+.Title {
+
+    font-size: 13pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    padding: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 10px;
+
+    border-left-width: 0;
+}
+
+.Title:hover {
+
+    color: #335C67;
+
+    text-decoration: none;
+
+    background: #FEF4AF;
+}
+
+
+/* =========================
+   TOP BUTTONS
+   ========================= */
+
+#Topright {
+
+    width: 60px;
+
+    text-align: center;
+
+    padding-top: 10px;
+    padding-bottom: 5px;
+
+    float: right;
+
+    margin-left: auto;
+
+    margin-top: 100px;
+}
+
+
+#Topleft {
+
+    width: 60px;
+
+    text-align: center;
+
+    padding-top: 10px;
+    padding-bottom: 5px;
+
+    float: left;
+
+    margin-left: auto;
+
+    margin-top: 100px;
+}
+
+
+/* =========================
+   SIDE
+   ========================= */
+
+#side {
+
+    width: 300px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#col {
+
+    height: auto;
+    overflow: hidden;
+
+    width: 300px;
+    max-width: 300px;
+
+    text-align: center;
+
+    font-size: 9pt;
+
+    padding-bottom: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    font-family: "Lion", sans-serif;
+}
+
+
+/* =========================
+   ABOUT
+   ========================= */
+
+.Titleabout {
+
+    font-size: 13pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    padding: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 10px;
+
+    border-right-width: 0;
+
+    cursor: pointer;
+}
+
+.Titleabout:hover {
+
+    color: #335C67;
+
+    text-decoration: none;
+
+    background: #FEF4AF;
+}
+
+.colabout {
+
+    height: auto;
+    overflow: hidden;
+
+    width: 300px;
+    max-width: 300px;
+
+    text-align: center;
+
+    font-size: 9pt;
+
+    padding-bottom: 10px;
+
+    border: 1px dashed #FEF4AF;
+
+    margin-bottom: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: none;
+
+    direction: rtl;
+
+    font-family: "Lion", sans-serif;
+}
+
+
+/* =========================
+   LINKS SECTION
+   ========================= */
+
+.Titlelink {
+
+    font-size: 13pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    padding: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 10px;
+
+    cursor: pointer;
+}
+
+.Titlelink:hover {
+
+    color: #335C67;
+
+    text-decoration: none;
+
+    background: #FEF4AF;
+}
+
+.collink {
+
+    height: auto;
+    overflow: hidden;
+
+    width: 300px;
+    max-width: 300px;
+
+    text-align: center;
+
+    font-size: 9pt;
+
+    padding-bottom: 10px;
+
+    border: 1px dashed #FEF4AF;
+
+    margin-bottom: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: none;
+
+    direction: rtl;
+
+    font-family: "Lion", sans-serif;
+}
+
+
+/* =========================
+   TAGS
+   ========================= */
+
+.Titletag {
+
+    font-size: 13pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    padding: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 10px;
+
+    cursor: pointer;
+}
+
+.Titletag:hover {
+
+    color: #335C67;
+
+    text-decoration: none;
+
+    background: #FEF4AF;
+}
+
+.coltag {
+
+    height: auto;
+    overflow: hidden;
+
+    width: 300px;
+    max-width: 300px;
+
+    text-align: center;
+
+    font-size: 9pt;
+
+    padding-bottom: 10px;
+
+    border: 1px dashed #FEF4AF;
+
+    margin-bottom: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: none;
+
+    direction: rtl;
+
+    font-family: "Lion", sans-serif;
+}
+
+
+/* =========================
+   ARCHIVE
+   ========================= */
+
+.Titlearchive {
+
+    font-size: 13pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    padding: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 10px;
+
+    cursor: pointer;
+}
+
+.Titlearchive:hover {
+
+    color: #335C67;
+
+    text-decoration: none;
+
+    background: #FEF4AF;
+}
+
+.colarchive {
+
+    height: auto;
+    overflow: hidden;
+
+    width: 300px;
+    max-width: 300px;
+
+    text-align: center;
+
+    font-size: 9pt;
+
+    padding-bottom: 10px;
+
+    border: 1px dashed #FEF4AF;
+
+    margin-bottom: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: none;
+
+    direction: rtl;
+
+    font-family: "Lion", sans-serif;
+}
+
+
+/* =========================
+   CATEGORIES
+   ========================= */
+
+.Titlecategory {
+
+    font-size: 13pt;
+
+    display: block;
+
+    font-family: "Azar", sans-serif;
+
+    padding: 5px;
+
+    border: 1px solid #FEF4AF;
+
+    margin-bottom: 10px;
+
+    cursor: pointer;
+
+    border-left-width: 0;
+}
+
+.Titlecategory:hover {
+
+    color: #335C67;
+
+    text-decoration: none;
+
+    background: #FEF4AF;
+}
+
+.colcategory {
+
+    height: auto;
+    overflow: hidden;
+
+    width: 300px;
+    max-width: 300px;
+
+    text-align: center;
+
+    font-size: 9pt;
+
+    padding-bottom: 10px;
+
+    border: 1px dashed #FEF4AF;
+
+    margin-bottom: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: none;
+
+    direction: rtl;
+
+    font-family: "Lion", sans-serif;
+}
+
+
+/* =========================
+   PREVIOUS / NEXT
+   ========================= */
+
+.inside {
+
+    text-align: center;
+
+    padding-top: 5px;
+
+    font-family: "Lion", sans-serif;
+
+    padding-bottom: 5px;
+
+    font-size: 13pt;
+
+    color: #FEF4AF;
+
+    border-bottom: 3px solid rgba(255,255,255,.1);
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================
+   BLOG HEADER
+   ========================= */
+
+#pic {
+
+    width: 380px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #FEF4AF;
+
+    margin: 10px auto;
+
+    padding-top: 5px;
+}
+
+#pic > a {
+
+    font-family: "Melodrame", sans-serif;
+
+    font-size: 25pt;
+
+    color: #FEF4AF;
+}
+
+#pic p {
+
+    font-family: "Lion", sans-serif;
+
+    font-size: 10px;
+}
+
+
+/* =========================
+   IMAGES
+   ========================= */
+
+img {
+
+    max-width: 372px;
+}
+
+
+/* =========================
+   TEXT SELECTION
+   ========================= */
+
+::-moz-selection {
+
+    background-color: #FEF4AF;
+
+    color: #335C67;
+}
+
+::selection {
+
+    background-color: #FEF4AF;
+
+    color: #335C67;
+}
+
+
+/* =========================
+   SCROLLBAR
+   ========================= */
+
+::-webkit-scrollbar {
+
+    background-color: #FEF4AF;
+
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+
+    background-color: #335C67;
+
+    border-radius: 25px;
+
+    border: 1px solid #FEF4AF;
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+    background-color: #FEF4AF;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media screen and (max-width: 700px) {
+
+    #Grannyone {
+
+        width: 100%;
+
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #Granny {
+
+        width: 400px;
+
+        max-width: 100%;
+    }
+
+    #pic {
+
+        width: calc(100% - 20px);
+    }
+
+    #Topright,
+    #Topleft {
+
+        position: relative;
+
+        margin-top: 60px;
+    }
+
+    #Topright {
+
+        margin-right: 5px;
+    }
+
+    #Topleft {
+
+        margin-left: 5px;
+    }
+
+    #side {
+
+        max-width: 100%;
+    }
+
+    #col {
+
+        max-width: 100%;
+    }
+
+    .post-item {
+
+        width: calc(50% - 7px);
+    }
+
+    img {
+
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+    #Topright,
+    #Topleft {
+
+        float: none;
+
+        display: block;
+
+        width: 100%;
+
+        margin-top: 20px;
+    }
+
+    #Topright .Title,
+    #Topright .Titlecategory,
+    #Topleft .Titleabout,
+    #Topleft .Titlelink,
+    #Topleft .Titletag,
+    #Topleft .Titlearchive {
+
+        width: 60px;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .post-item {
+
+        width: 100%;
+    }
+
+    .post-item:first-child {
+
+        width: 100%;
+    }
+
+    #no {
+
+        width: 100%;
+
+        margin-right: 0;
+    }
+}
+
+</style>
+
 </head>
+
+
 <body>
 
-<div class="topbar">
-  <div class="wrap">
-    <span class="issue-line">شماره ۱۴ · دوره‌ی سوم · چاپ یکشنبه‌ها</span>
-    <nav class="topbar-links">
-      <a href="#newsletter">اشتراک نشریه</a>
-      <a href="#contact">ارسال یادداشت</a>
-    </nav>
-  </div>
+<div id="Grannyone">
+
+
+<!-- =========================
+     LEFT MENU
+     ========================= -->
+
+<div id="Topleft">
+
+    <div class="Titleabout" onclick="goProfile()">
+        مَن
+    </div>
+
+    <div class="Titlelink" onclick="toggleSection('links')">
+        ایمٰاژ
+    </div>
+
+    <div class="Titletag" onclick="toggleSection('tags')">
+        تَگ‌ها
+    </div>
+
+    <div class="Titlearchive" onclick="toggleSection('archive')">
+        آرشیو
+    </div>
+
 </div>
 
-<header class="masthead">
-  <div class="wrap">
-    <h1 class="brand-name"><a href="index.html">دفتر روایت</a></h1>
-    <p class="tagline">نشریه‌ای کوچک درباره‌ی نوشتن، کلمات، و هنر روایت کردن</p>
-  </div>
-</header>
 
-<nav class="sitenav">
-  <div class="wrap">
-    <a href="index.html" class="active">خانه</a>
-    <a href="#archive">مقاله‌ها</a>
-    <a href="#about">درباره‌ی نویسنده</a>
-    <a href="#newsletter">خبرنامه</a>
-    <a href="#contact">تماس</a>
-  </div>
+<!-- =========================
+     RIGHT MENU
+     ========================= -->
+
+<div id="Topright">
+
+    <div class="Titlecategory" onclick="toggleSection('categories')">
+        آثار
+    </div>
+
+    <a href="category.html?category=projects" class="Title">
+        پروژه‌ها
+    </a>
+
+    <a href="category.html?category=studies" class="Title">
+        مطٰالعات
+    </a>
+
+    <a href="category.html?category=notes" class="Title">
+        یٰادداشت
+    </a>
+
+</div>
+
+
+<!-- =========================
+     MAIN BLOG
+     ========================= -->
+
+<div id="Granny">
+
+
+<!-- =========================
+     BLOG HEADER
+     ========================= -->
+
+<div id="pic">
+
+    <a href="index.html">
+        Homo Irrealis
+    </a>
+
+    <p>
+        ایمٰاژ، آثار و یادداشت‌ها
+    </p>
+
+</div>
+
+
+<!-- =========================
+     ABOUT
+     ========================= -->
+
+<div class="colabout" id="section-about">
+
+    <div class="Titlebox">
+        درباره من ...
+    </div>
+
+    <p>
+        این بخش برای معرفی صاحب وبلاگ است.
+    </p>
+
+</div>
+
+
+<!-- =========================
+     CATEGORIES
+     ========================= -->
+
+<div class="colcategory" id="section-categories">
+
+    <div class="Titlebox">
+        ✢
+    </div>
+
+    <a href="category.html?category=projects"
+       style="font-size:9pt;display:block">
+        پروژه‌ها
+    </a>
+
+    <a href="category.html?category=studies"
+       style="font-size:9pt;display:block">
+        مطالعات
+    </a>
+
+    <a href="category.html?category=notes"
+       style="font-size:9pt;display:block">
+        یادداشت
+    </a>
+
+</div>
+
+
+<!-- =========================
+     PINTEREST
+     ========================= -->
+
+<div class="collink" id="section-links">
+
+    <div class="Titlebox">
+        Pinterest
+    </div>
+
+    <a
+        data-pin-do="embedBoard"
+        data-pin-board-width="280"
+        data-pin-scale-height="200"
+        data-pin-scale-width="80"
+        href="https://www.pinterest.com/itsnyctophilia/21-%CA%BCtill-i-die/">
+    </a>
+
+</div>
+
+
+<!-- =========================
+     TAGS
+     ========================= -->
+
+<div class="coltag" id="section-tags">
+
+    <div class="Titlebox">
+        برچسب ها
+    </div>
+
+    <div id="tag-list"></div>
+
+</div>
+
+
+<!-- =========================
+     ARCHIVE
+     ========================= -->
+
+<div class="colarchive" id="section-archive">
+
+    <div class="Titlebox">
+        ارشیو مطالب
+    </div>
+
+    <div id="archive-list"></div>
+
+</div>
+
+
+<!-- =========================
+     POSTS
+     ========================= -->
+
+<div class="posts-grid" id="posts-container">
+</div>
+
+
+<!-- =========================
+     NEXT / PREVIOUS
+     ========================= -->
+
+<div id="no">
+
+    <a href="#" class="inside" style="float:right" id="previous-page">
+        صفحه قبل
+    </a>
+
+    <a href="#" class="inside" style="float:left" id="next-page">
+        صفحه بعد
+    </a>
+
+</div>
+
+
+<!-- =========================
+     SIDE
+     ========================= -->
+
+<div id="side">
+
+    <div id="col">
+
+        <div class="Titlebox">
+            ✢
+        </div>
+
+        <span>
+            Homo Irrealis
+        </span>
+
+    </div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   BLOG DATA
+   =========================
+
+   بعداً پنل مدیریت این بخش را
+   به صورت خودکار مدیریت می‌کند.
+*/
+
+const posts = [
+
+    {
+        id: 1,
+
+        title: "نمونه نوشته",
+
+        date: "۱۵ مرداد ۱۴۰۵",
+
+        time: "22:00",
+
+        author: "DIAN",
+
+        category: "notes",
+
+        tags: [
+            "یادداشت",
+            "ایماژ"
+        ],
+
+        image: "",
+
+        content: `
+            <p>
+                این یک نوشته‌ی نمونه است.
+            </p>
+
+            <p>
+                محتوای واقعی نوشته‌های وبلاگ
+                بعداً از طریق پنل مدیریت وارد خواهد شد.
+            </p>
+        `
+    },
+
+    {
+        id: 2,
+
+        title: "نمونه اثر",
+
+        date: "۱۴ مرداد ۱۴۰۵",
+
+        time: "18:30",
+
+        author: "DIAN",
+
+        category: "projects",
+
+        tags: [
+            "پروژه",
+            "اثر"
+        ],
+
+        image: "",
+
+        content: `
+            <p>
+                این قسمت برای نمایش یک اثر نمونه است.
+            </p>
+        `
+    },
+
+    {
+        id: 3,
+
+        title: "یک یادداشت دیگر",
+
+        date: "۱۳ مرداد ۱۴۰۵",
+
+        time: "16:00",
+
+        author: "DIAN",
+
+        category: "studies",
+
+        tags: [
+            "مطالعات"
+        ],
+
+        image: "",
+
+        content: `
+            <p>
+                محتوای نمونه‌ی نوشته.
+            </p>
+        `
+    }
+
+];
+
+
+/* =========================
+   CREATE POST
+   ========================= */
+
+function createPost(post, index) {
+
+    const article = document.createElement("div");
+
+    article.className = "post-item";
+
+    let imageHTML = "";
+
+    if (post.image) {
+
+        imageHTML = `
+            <img
+                src="${post.image}"
+                class="preview-image"
+                alt="${escapeHTML(post.title)}"
+            >
+        `;
+
+    } else {
+
+        imageHTML = `
+            <div class="preview-no-image">
+                بدون تصویر
+            </div>
+        `;
+
+    }
+
+
+    article.innerHTML = `
+
+        <div class="Main">
+
+            <div class="THP">
+
+                <a href="post.html?id=${post.id}">
+                    ${escapeHTML(post.title)}
+                </a>
+
+            </div>
+
+
+            <div class="MP">
+
+                <div class="PTB">
+
+                    ${post.content}
+
+                    ${
+                        post.tags && post.tags.length
+                        ?
+                        `
+                        <br>
+
+                        <span style="font-size:8pt">
+                            برچسب ها &nbsp;:&nbsp;
+                        </span>
+
+                        ${post.tags.map(tag => `
+                            <a href="tag.html?tag=${encodeURIComponent(tag)}">
+                                <span style="font-size:8pt">
+                                    ${escapeHTML(tag)}
+                                </span>
+                            </a>
+                        `).join("، ")}
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="Mc">
+
+                <a href="post.html?id=${post.id}">
+                    &nbsp;+ بیشتر&nbsp;
+                </a>
+
+            </div>
+
+
+            <div class="Mc">
+
+                ${escapeHTML(post.date)}
+
+                &nbsp;|&nbsp;
+
+                ${escapeHTML(post.time)}
+
+                &nbsp;|&nbsp;
+
+                ${escapeHTML(post.author)}
+
+            </div>
+
+
+            ${
+                index !== 0
+                ?
+                `
+                <div class="post-preview">
+
+                    ${imageHTML}
+
+                    <a
+                        href="post.html?id=${post.id}"
+                        class="preview-link"
+                    >
+                        مشاهده/متن
+                    </a>
+
+                </div>
+                `
+                :
+                ""
+            }
+
+        </div>
+    `;
+
+
+    return article;
+}
+
+
+/* =========================
+   RENDER POSTS
+   ========================= */
+
+function renderPosts() {
+
+    const container =
+        document.getElementById("posts-container");
+
+    container.innerHTML = "";
+
+    posts.forEach((post, index) => {
+
+        container.appendChild(
+            createPost(post, index)
+        );
+
+    });
+
+}
+
+
+/* =========================
+   TAGS
+   ========================= */
+
+function renderTags() {
+
+    const container =
+        document.getElementById("tag-list");
+
+    const tags = {};
+
+    posts.forEach(post => {
+
+        if (!post.tags) return;
+
+        post.tags.forEach(tag => {
+
+            if (!tags[tag]) {
+                tags[tag] = 0;
+            }
+
+            tags[tag]++;
+
+        });
+
+    });
+
+
+    container.innerHTML =
+        Object.keys(tags).map(tag => {
+
+            return `
+                <a
+                    href="tag.html?tag=${encodeURIComponent(tag)}"
+                    style="font-size:9pt;display:block"
+                >
+                    ${escapeHTML(tag)}
+                    (${tags[tag]})
+                </a>
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================
+   ARCHIVE
+   ========================= */
+
+function renderArchive() {
+
+    const container =
+        document.getElementById("archive-list");
+
+    container.innerHTML =
+        posts.map(post => {
+
+            return `
+                <a
+                    href="post.html?id=${post.id}"
+                    style="font-size:9pt;display:block"
+                >
+                    ${escapeHTML(post.title)}
+                </a>
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================
+   SIDEBAR
+   ========================= */
+
+function toggleSection(section) {
+
+    const sections = [
+        "categories",
+        "links",
+        "tags",
+        "archive"
+    ];
+
+    sections.forEach(name => {
+
+        const element =
+            document.getElementById(
+                "section-" + name
+            );
+
+        if (!element) return;
+
+        if (name === section) {
+
+            if (
+                element.style.display === "block"
+            ) {
+
+                element.style.display = "none";
+
+            } else {
+
+                element.style.display = "block";
+
+            }
+
+        } else {
+
+            element.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+/* =========================
+   PROFILE
+   ========================= */
+
+function goProfile() {
+
+    window.location.href =
+        "profile.html";
+
+}
+
+
+/* =========================
+   SECURITY / HTML ESCAPE
+   ========================= */
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = value;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   INITIALIZE
+   ========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        renderPosts();
+
+        renderTags();
+
+        renderArchive();
+
+    }
+);
+
+</script>
+
+
+<!-- Pinterest -->
+
+<script
+    async
+    defer
+    src="https://assets.pinterest.com/js/pinit.js">
+</script>
+
+
+</body>
+</html>  </div>
 </nav>
 
 <section class="hero">
